@@ -4905,7 +4905,7 @@ class TelegramAdapter(BasePlatformAdapter):
         query_chat = getattr(query_message, "chat", None)
         query_chat_type = getattr(query_chat, "type", None)
         query_thread_id = getattr(query_message, "message_thread_id", None)
-        query_user_name = getattr(query.from_user, "first_name", None)
+        query_user_name = getattr(query.from_user, "first_name", None) or getattr(query.from_user, "last_name", None) or str(getattr(query.from_user, "id", "User"))
 
         # --- Model picker callbacks ---
         if data.startswith(("mp:", "mpg:", "mm:", "mc:", "mb", "mx", "mg:")):
@@ -4961,7 +4961,7 @@ class TelegramAdapter(BasePlatformAdapter):
                     "always": "✅ Approved permanently",
                     "deny": "❌ Denied",
                 }
-                user_display = getattr(query.from_user, "first_name", "User")
+                user_display = getattr(query.from_user, "first_name", None) or getattr(query.from_user, "last_name", None) or str(getattr(query.from_user, "id", "User"))
                 label = label_map.get(choice, "Resolved")
 
                 await query.answer(text=label)
@@ -5025,7 +5025,7 @@ class TelegramAdapter(BasePlatformAdapter):
                     "always": "🔒 Always approve",
                     "cancel": "❌ Cancelled",
                 }
-                user_display = getattr(query.from_user, "first_name", "User")
+                user_display = getattr(query.from_user, "first_name", None) or getattr(query.from_user, "last_name", None) or str(getattr(query.from_user, "id", "User"))
                 label = label_map.get(choice, "Resolved")
 
                 await query.answer(text=label)
@@ -5120,7 +5120,7 @@ class TelegramAdapter(BasePlatformAdapter):
                     await query.answer(text="This prompt has already been resolved.")
                     return
 
-                user_display = getattr(query.from_user, "first_name", "User")
+                user_display = getattr(query.from_user, "first_name", None) or getattr(query.from_user, "last_name", None) or str(getattr(query.from_user, "id", "User"))
 
                 if choice_token == "other":
                     # Flip into text-capture mode and tell the user to type
@@ -5351,7 +5351,7 @@ class TelegramAdapter(BasePlatformAdapter):
         if not success:
             return
 
-        user_display = getattr(query.from_user, "first_name", "User")
+        user_display = getattr(query.from_user, "first_name", None) or getattr(query.from_user, "last_name", None) or str(getattr(query.from_user, "id", "User"))
         original_text = (query.message.text or "") if query.message else ""
         appended = f"{original_text}\n— {label} by {user_display}"
         try:
